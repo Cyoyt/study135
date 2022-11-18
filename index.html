@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <link rel="icon" href="/delogosmalltransparent.png">
+    <script src=https://unpkg.com/vue@2.5.17/dist/vue.min.js></script>
+    <script src=https://unpkg.com/vue-amap@0.5.9/dist/index.js></script>
+    <script src="https://unpkg.com/axios@0.18.0/dist/axios.min.js"></script>
+    <script src=https://unpkg.com/vue-localstorage@0.6.2/dist/vue-local-storage.js></script>
+    <script src=https://unpkg.com/element-ui@2.4.11/lib/index.js></script>
+    <script src=https://unpkg.com/vuex@3.0.1/dist/vuex.min.js></script>
+    <link href=https://unpkg.com/swiper@4.5.0/dist/css/swiper.min.css rel=stylesheet>
+    <script src=https://unpkg.com/swiper@4.5.0/dist/js/swiper.min.js></script>
+    <script src=https://unpkg.com/vue-awesome-swiper@3.1.3/dist/vue-awesome-swiper.js></script>
+    <!-- 网站标题 -->
+    <title>数字孪生平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.0/dist/echarts.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+        @media only screen and (max-width: 480px) {
+            img {
+                max-width: 600px;
+            }
+            table.content-wrap,
+            table.fullTable,
+            table td.fullTd {
+                width: 100% !important;
+            }
+
+            /*模式二（默认模式），到时候可以选择不同模式设置不同class*/
+            .fixation .fourColumn,
+            .fixation .threeColumn {
+                width: 50% !important;
+                max-width: 50% !important;
+                display: block;
+                float: left;
+            }
+
+            .fixation .threeColumn.column1 {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* 模式三（全屏模式）*/
+            .full .fourColumn,
+            .full .threeColumn {
+                width: 100% !important;
+                max-width: 100% !important;
+                display: block !important;
+            }
+
+            .content-wrap {
+                width: 100% !important;
+            }
+
+            .content-wrap .el-table__header {
+                width: 100% !important;
+            }
+        }
+
+        /*@media (min-width: 481px), not screen{
+        table .setting-max-width{
+            width: 600px !important;
+        }
+      }*/
+      /* 轮播图主体 */
+      .swipe {
+        /* 相对定位 */
+        position: relative;
+        width: 100%;
+        /* 溢出隐藏 */
+        overflow: hidden;
+      }
+      /* 模糊背景 */
+      .swipe .bg {
+        /* 绝对定位 */
+        position: absolute;
+        width: 500%;
+        height: 100%;
+        z-index: 1;
+        background-image: url("../images/cloud_music/1.jpg");
+        background-size: 6000px;
+        background-position: center center;
+        /* 模糊滤镜 */
+        filter: blur(140px);
+      }
+      /* 图片区域 */
+      .swipe section {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1500px;
+        height: 400px;
+        /* 居中 */
+        margin: 0 auto;
+      }
+      /* 图片盒子 */
+      .swipe .img-box {
+        width: 100%;
+        height: 100%;
+      }
+      /* 图片 */
+      .swipe .img-box .img {
+        width: 100%;
+        height: 100%;
+        /* 保持原有尺寸比例, 裁切长边 */
+        object-fit: cover;
+      }
+      /* 指示器 */
+      .swipe .select {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        line-height: 30px;
+        bottom: 20px;
+        text-align: center;
+      }
+      .swipe .select .item {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        border-radius: 50%;
+        margin: 0 10px;
+        /* 阴影 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      }
+      /* 鼠标移入指示器 */
+      .swipe .select .item:hover {
+        background-color: #ff4400;
+      }
+      /* 指示器选中状态 */
+      .swipe .select .item.checked {
+        background-color: #ff4400;
+      }
+      /* 两侧翻页按钮 */
+      .swipe .btn {
+        width: 40px;
+        height: 100px;
+        color: #fff;
+        /* 绝对定位 垂直居中 */
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 50px;
+        background-color: rgba(0, 0, 0, 0.05);
+        /* 弹性布局 居中 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 3;
+        /* 鼠标移入光标变小手 */
+        cursor: pointer;
+        /* 动画过渡 */
+        transition: 0.3s;
+      }
+      .swipe .btn.left {
+        left: -60px;
+      }
+      .swipe .btn.right {
+        right: -60px;
+      }
+      .swipe .btn:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      /* 响应式 屏幕尺寸小于1620px时以下代码生效(让两个按钮移动到图片主体内部) */
+      @media screen and (max-width: 1620px) {
+        .swipe .btn.left {
+          left: 20px;
+        }
+        .swipe .btn.right {
+          right: 20px;
+        }
+      }
+    </style>
+    
+     <style>
+      .box{
+        height: 500px;
+        border: 0px solid rgb(225, 220, 220);
+        border-radius: 5px;
+        margin: 100px auto;
+        position: relative;
+        overflow: hidden;
+      }
+      .box ul{
+        display: flex;
+        list-style: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .box ul li{
+        margin: 5px;
+      }
+      .nav{
+        width: 300px;
+        height: 20px;
+        margin: 30px auto;
+        display: flex;
+        justify-content: space-between;
+      }
+      .nav a{
+        font-size: 20px;
+        color: #fff;
+        display: block;
+        width: 100px;
+        height: 30px;
+        background-color: #999;
+        margin: 10px;
+        text-align: center;
+        border-radius: 8px;
+      }
+    </style>
+    <script>
+      // jQuery代码
+      $(document).ready(function () {
+        $("#b0").click(function () {
+          $("#tab_0").show(); // 显示
+          $("#tab_1").hide(); // 隐藏
+          $("#tab_2").hide(); // 隐藏
+          $("#tab_3").hide(); // 隐藏
+          $("#tab_4").hide(); // 隐藏
+          $("#tab_5").hide(); // 隐藏
+        });
+        $("#b1").click(function () {
+          $("#tab_0").hide(); // 隐藏
+          $("#tab_1").show(); // 显示
+          $("#tab_2").hide(); // 隐藏
+          $("#tab_3").hide(); // 隐藏
+          $("#tab_4").hide(); // 隐藏
+          $("#tab_5").hide(); // 隐藏
+        });
+        $("#b2").click(function () {
+          $("#tab_0").hide();
+          $("#tab_1").hide();
+          $("#tab_2").show();
+          $("#tab_3").hide();
+          $("#tab_4").hide();
+          $("#tab_5").hide();
+        });
+        $("#b3").click(function () {
+          $("#tab_0").hide();
+          $("#tab_1").hide();
+          $("#tab_2").hide();
+          $("#tab_3").show();
+          $("#tab_4").hide();
+          $("#tab_5").hide();
+        });
+        $("#b4").click(function () {
+          $("#tab_0").hide();
+          $("#tab_1").hide();
+          $("#tab_2").hide();
+          $("#tab_3").hide();
+          $("#tab_4").show();
+          $("#tab_5").hide();
+        });
+        $("#b5").click(function () {
+          $("#tab_0").hide();
+          $("#tab_1").hide();
+          $("#tab_2").hide();
+          $("#tab_3").hide();
+          $("#tab_4").hide();
+          $("#tab_5").show();
+        });
+      });
+    </script> 
+    <link href=https://www.drageasy.com/drag-assets/pc/drag-css/chunk-vendors.css rel=stylesheet>
+</head>
+
+<body>
+    <noscript>
+        <strong>您的浏览器禁用了javascript，请启用后再试.</strong>
+    </noscript>
+    <script> var lists = [{ "selected": false, "hover": false, "clickActive": false, "subHover": false, "controlSelect": false, "error": false }, { "type": "textBlock", "text": "<p>\u533b\u7597\u5668\u68b0\u5546\u57ce<\/p>", "hover": false, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "rgb(49, 126, 231)", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "20px", "widgetPaddingLeftRight": "20px", "fontSize": "24px", "align": "center", "color": "rgba(255, 255, 255, 1)", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "clickActive": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }, { "type": "spaceBlock", "hover": false, "subHover": false, "editName": "Space", "width": "0", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "spaceBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "9px", "bgAttr": "normal" }, "clickActive": false, "link": "", "controlSelect": false, "error": false }, { "type": "dividerBlock", "hover": false, "subHover": false, "editName": "Divider", "width": "0", "selected": false, "clickActive": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "style": { "bgAttr": "normal", "dividerOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgPositionTop": 50, "bgPositionLeft": 10, "lineWidth": "375px", "borderWidth": "1px", "borderColor": "rgb(204 204 204)", "borderStyle": "solid", "align": "center", "widgetPaddingTopBottom": "20px", "widgetPaddingLeftRight": "20px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px" } }, { "type": "column", "numberEn": "four", "containerDrag": false, "number": 5, "hover": false, "clickActive": false, "selected": false, "isOutsideBg": false, "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 1, "bgColor": "#ffffff", "bgAttr": "normal" }, "children": [{ "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "buttonBlock", "hover": true, "text": "\u9879\u76ee\u6982\u89c8", "subHover": false, "editName": "Button", "width": 1, "buttonLink": "http:\/\/www.drageasy.com", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "buttonOuterBg": "", "borderColor": "rgba(49, 126, 231, 1)", "borderWidth": "1px", "borderStyle": "solid", "borderRadius": "10px", "bgSrc": "", "bgSize": "41px", "bgRepeat": false, "bgPositionTop": 45, "bgPositionLeft": 42, "paddingTopBottom": "10px", "paddingLeftRight": "10px", "buttonFontSize": "15px", "buttonColor": "#ffffff", "buttonBg": "rgba(49, 126, 231, 1)", "align": "center", "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "bgLevel": "button", "targetDrag": false, "clickActive": false, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "bgAttr": "normal" }, { "type": "textBlock", "text": "<p><span style=\"color: rgb(90, 90, 90);\">\u8840\u538b\u8ba1<\/span><\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "2px", "widgetPaddingLeftRight": "0px", "fontSize": "12px", "align": "center", "color": "#666", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "targetDrag": false, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }, { "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "buttonBlock", "hover": true, "text": "\u76d1\u6d4b\u6570\u636e", "subHover": false, "editName": "Button", "width": 1, "buttonLink": "http:\/\/www.drageasy.com", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "buttonOuterBg": "", "borderColor": "rgba(49, 126, 231, 1)", "borderWidth": "1px", "borderStyle": "solid", "borderRadius": "10px", "bgSrc": "", "bgSize": "37px", "bgRepeat": false, "bgPositionTop": 45, "bgPositionLeft": 42, "paddingTopBottom": "10px", "paddingLeftRight": "10px", "buttonFontSize": "15px", "buttonColor": "#ffffff", "buttonBg": "rgba(49, 126, 231, 1)", "align": "center", "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "bgLevel": "button", "vColumnSelect": false, "targetDrag": false, "clickActive": false, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "bgAttr": "normal" }, { "type": "textBlock", "text": "<p><span style=\"color: rgb(90, 90, 90);\">\u8f6e\u6905\u4e13\u573a<\/span><\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "2px", "widgetPaddingLeftRight": "0px", "fontSize": "12px", "align": "center", "color": "#666", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "targetDrag": false, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }, { "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "buttonBlock", "hover": true, "text": "\u72b6\u6001\u8bc4\u4f30", "subHover": false, "editName": "Button", "width": 1, "buttonLink": "http:\/\/www.drageasy.com", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "buttonOuterBg": "", "borderColor": "rgba(49, 126, 231, 1)", "borderWidth": "1px", "borderStyle": "solid", "borderRadius": "10px", "bgSrc": "", "bgSize": "37px", "bgRepeat": false, "bgPositionTop": 45, "bgPositionLeft": 47, "paddingTopBottom": "10px", "paddingLeftRight": "10px", "buttonFontSize": "15px", "buttonColor": "#ffffff", "buttonBg": "rgba(49, 126, 231, 1)", "align": "center", "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "bgLevel": "button", "vColumnSelect": false, "targetDrag": false, "clickActive": false, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "bgAttr": "normal" }, { "type": "textBlock", "text": "<p><span style=\"color: rgb(90, 90, 90);\">\u7406\u7597\u4eea\u5668<\/span><\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "2px", "widgetPaddingLeftRight": "0px", "fontSize": "12px", "align": "center", "color": "#666", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "targetDrag": false, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }, { "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "buttonBlock", "hover": true, "text": "\u7ed3\u6784\u7ef4\u62a4", "subHover": false, "editName": "Button", "width": 1, "buttonLink": "http:\/\/www.drageasy.com", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "buttonOuterBg": "", "borderColor": "rgba(49, 126, 231, 1)", "borderWidth": "1px", "borderStyle": "solid", "borderRadius": "10px", "bgSrc": "", "bgSize": "37px", "bgRepeat": false, "bgPositionTop": 45, "bgPositionLeft": 50, "paddingTopBottom": "10px", "paddingLeftRight": "10px", "buttonFontSize": "15px", "buttonColor": "#ffffff", "buttonBg": "rgba(49, 126, 231, 1)", "align": "center", "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "bgLevel": "button", "vColumnSelect": false, "targetDrag": false, "clickActive": false, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "bgAttr": "normal" }, { "type": "textBlock", "text": "<p><span style=\"color: rgb(90, 90, 90);\">\u8f6e\u6905\u4e13\u573a<\/span><\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "2px", "widgetPaddingLeftRight": "0px", "fontSize": "12px", "align": "center", "color": "#666", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "targetDrag": false, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }, { "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "buttonBlock", "hover": true, "text": "\u4eba\u5458\u4fe1\u606f", "subHover": false, "editName": "Button", "width": 1, "buttonLink": "http:\/\/www.drageasy.com", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "buttonOuterBg": "", "borderColor": "rgba(49, 126, 231, 1)", "borderWidth": "1px", "borderStyle": "solid", "borderRadius": "10px", "bgSrc": "", "bgSize": "37px", "bgRepeat": false, "bgPositionTop": 45, "bgPositionLeft": 53, "paddingTopBottom": "10px", "paddingLeftRight": "10px", "buttonFontSize": "15px", "buttonColor": "#ffffff", "buttonBg": "rgba(49, 126, 231, 1)", "align": "center", "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "bgLevel": "button", "vColumnSelect": false, "targetDrag": false, "clickActive": false, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "bgAttr": "normal" }, { "type": "textBlock", "text": "<p><span style=\"color: rgb(90, 90, 90);\">\u8f6e\u6905\u4e13\u573a<\/span><\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "2px", "widgetPaddingLeftRight": "0px", "fontSize": "12px", "align": "center", "color": "#666", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "targetDrag": false, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }], "subHover": false, "love": false, "sort": "after", "beginIndex": 1, "error": false, "timestamp": 16049642194 }, { "type": "dividerBlock", "hover": false, "subHover": false, "editName": "Divider", "width": "0", "selected": false, "clickActive": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "style": { "bgAttr": "normal", "dividerOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgPositionTop": 50, "bgPositionLeft": 10, "lineWidth": "375px", "borderWidth": "1px", "borderColor": "rgb(204 204 204)", "borderStyle": "solid", "align": "center", "widgetPaddingTopBottom": "20px", "widgetPaddingLeftRight": "20px", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px" } }, { "type": "galleryBlock", "hover": false, "subHover": false, "editName": "Gallery", "hideText": true, "hideNavigation": false, "hidePagination": false, "loop": true, "fullScreen": false, "autoplay": true, "autoplayTime": "3s", "pics": [{ "imageSrc": "https:\/\/www.drageasy.com\/9a35096068a9921716922b81d8efd7ec.jpg?imageslim", "sort": 10, "text": "", "imgClickLink": "", "showOperateIcon": 0, "showOperate": 0, "remoteImageSrc": "", "isOpenRemoteImageSrc": false, "bgSrc": "https:\/\/www.drageasy.com\/img\/drag_default.jpeg", "style": { "isBgAuto": false } }, { "imageSrc": "https:\/\/www.drageasy.com\/90e875cf0077a55c596685b8e5449d0c.jpg?imageslim", "sort": 9, "text": "", "imgClickLink": "", "showOperateIcon": 0 }, { "imageSrc": "https:\/\/www.drageasy.com\/e79067a0d9f22b89e907ff785bc27252.jpg?imageslim", "sort": 8, "text": "", "imgClickLink": "" }, { "imageSrc": "https:\/\/www.drageasy.com\/9f1f7fe3d509288648799e2720245595.jpg?imageslim", "sort": 7, "text": "", "imgClickLink": "" }, { "imageSrc": "https:\/\/www.drageasy.com\/a9769e04e9f1ee19d591d5bbb28d8d2d.jpg?imageslim", "sort": 6, "text": "", "imgClickLink": "" }], "style": { "isBgAuto": false, "height": "350px" }, "option": { "loop": true, "autoplay": { "bool": true, "delay": 50000 } }, "pagination": { "bottom": "10px", "marginLeftRight": "8px", "normalBg": "rgba(0, 0, 0, 0.2)", "normalWidth": "10px", "normalHeight": "10px", "normalRadius": "8px", "activeBg": "#007aff", "activeWidth": "10px", "activeHeight": "10px", "activeRadius": "8px", "align": "center", "leftRightDistance": "10px" }, "navigation": { "leftBgSrc": "", "rightBgSrc": "", "top": 50, "bgSize": 50 }, "textStyle": { "background": "rgba(0, 0, 0, 0.4)", "lineHeight": "20px", "fontSize": "12px", "color": "#FFFFFF", "paddingTopBottom": "10px", "paddingLeftRight": "10px", "textBottom": "0px", "align": "left" }, "selected": false, "clickActive": false, "controlSelect": false, "targetDrag": false, "error": false }, { "type": "imageBlock", "hover": false, "subHover": false, "editName": "Image", "width": "0", "remoteImageSrc": "", "isOpenRemoteImageSrc": false, "imgClickLink": "", "src": "https:\/\/www.drageasy.com\/img\/drag_default.jpeg", "srcBase64": false, "selected": false, "imageAutoWidth": true, "controlSelect": false, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false, "style": { "imageOuterBg": "", "isBgAuto": false, "borderColor": "rgb(204 204 204)", "borderWidth": "0px", "borderStyle": "solid", "borderRadius": "1px", "imageWidth": 498, "paddingTopBottom": 0, "paddingLeftRight": 0, "align": "center", "widgetPaddingTopBottom": "10px", "widgetPaddingLeftRight": "0px", "widgetPaddingTop": "10px", "widgetPaddingBottom": "10px", "widgetPaddingLeft": "10px", "widgetPaddingRight": "10px" }, "clickActive": false }, { "type": "column", "numberEn": "one", "containerDrag": false, "number": 1, "hover": false, "clickActive": false, "selected": false, "love": false, "isOutsideBg": false, "sort": "after", "beginIndex": 1, "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "error": false, "style": { "bgAttr": "normal", "bgSrc": "", "bgSize": "100px", "bgPositionTop": 50, "bgPositionLeft": 1, "bgColor": "" }, "children": [{ "type": "empty", "width": 1, "subHover": false, "controlSelect": false }], "timestamp": 1668645958747, "subHover": false }, { "type": "spaceBlock", "hover": false, "subHover": false, "editName": "Space", "width": "0", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "spaceBg": "#434343", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "14px", "bgAttr": "normal" }, "clickActive": false, "link": "", "controlSelect": false, "error": false }, { "type": "column", "numberEn": "one", "containerDrag": false, "number": 1, "hover": false, "clickActive": false, "selected": false, "isOutsideBg": false, "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 1, "bgColor": "#434343", "bgAttr": "normal" }, "children": [{ "vColumnSelect": false, "type": "vColumn", "numberEn": "two", "containerDrag": false, "number": 2, "hover": true, "clickActive": true, "selected": false, "subHover": false, "isOutsideBg": false, "sort": "after", "outStyle": [], "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "children": [{ "type": "textBlock", "text": "<p>\u54a8\u8be2\u7535\u8bdd\uff1a400-000-0000<\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "0px", "widgetPaddingLeftRight": "20px", "fontSize": "12px", "align": "center", "color": "rgba(255, 255, 255, 1)", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }, { "type": "textBlock", "text": "<p>2012-0005\u00a9 2003-2016 xxxxx.COM \u7248\u6743\u6240\u6709<\/p>", "hover": true, "subHover": false, "selected": false, "editName": "Text", "width": "0", "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "textOuterBg": "", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "1px", "widgetPaddingLeftRight": "20px", "fontSize": "12px", "align": "center", "color": "rgba(214, 214, 214, 1)", "fontBolder": 0, "lineHeight": "16", "widgetPaddingTop": "20px", "widgetPaddingBottom": "20px", "widgetPaddingLeft": "20px", "widgetPaddingRight": "20px", "bgAttr": "normal" }, "controlSelect": false, "placeholder": "\u70b9\u51fb\u6b64\u5904\u6253\u5f00\u7f16\u8f91\u9762\u677f", "underline": 0, "showPaddingWidgetLeftRight": false, "showPaddingWidgetTopBottom": false, "error": false }], "width": 1, "beginIndex": 1, "link": "", "controlSelect": false }], "subHover": false, "love": false, "sort": "after", "beginIndex": 1, "error": false, "timestamp": 160496421920 }, { "type": "spaceBlock", "hover": false, "subHover": false, "editName": "Space", "width": "0", "selected": false, "isOpenRemoteImageSrc": false, "remoteImageSrc": "", "style": { "isBgAuto": false, "spaceBg": "#434343", "bgSrc": "", "bgSize": "100px", "bgRepeat": false, "bgPositionTop": 50, "bgPositionLeft": 10, "widgetPaddingTopBottom": "14px", "bgAttr": "normal" }, "clickActive": false, "targetDrag": false, "link": "", "controlSelect": false, "error": false }];
+        window.drageasyConfig = {
+            rightLists: lists,
+            makeType: 'email',
+        };</script>
+    <div>
+
+        <div class="preview-content" style="width: 100%;">
+            <div class="content-wrap"
+                style="margin: 0px auto; overflow: hidden; background-color: rgb(255, 255, 255); width: 600px;">
+                <!---->
+                <div class="full" style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td class="fullTd"
+                                    style="direction: ltr; width: 600px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top; background-color: rgb(49, 126, 231); background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 10% 50%;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                        style="vertical-align: top;">
+                                        <tr>
+                                            <td align="left" style="font-size: 0px; padding: 20px;">
+                                                <div class="text"
+                                                    style="word-wrap: break-word; margin: 0px; text-align: center; line-height: 1.6; color: rgb(255, 255, 255); font-size: 24px; font-weight: normal;">
+                                                    <div>
+                                                        <p
+                                                            style="text-size-adjust: none; word-break: break-word; line-height: 1.6; font-size: 24px; margin: 0px;">
+                                                            数字孪生平台</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="full" style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; padding-top: 0px; text-align: center; vertical-align: top;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                        style="vertical-align: top;">
+                                        <tr>
+                                            <td align="center" vertical-align="middle"
+                                                style="line-height: 0; padding-top: 9px; width: 600px; background-image: url(&quot;&quot;); background-size: 100px; background-position: 10% 50%; background-repeat: no-repeat;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="full" style="margin: 0px auto; line-height: 0px; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td align="center" class="fullTd"
+                                    style="direction: ltr; font-size: 0px; padding: 20px; text-align: center; vertical-align: top; word-break: break-word; width: 600px; background-image: url(&quot;&quot;); background-repeat: repeat; background-size: 100px; background-position: 10% 50%;">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                        style="border-collapse: collapse; border-spacing: 0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 375px; border-top: 1px solid rgb(204, 204, 204);">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                        style="background-color: rgb(255, 255, 255); background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 1% 50%;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; width: 600px;">
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                        style="vertical-align: top;">
+                                        <tbody>
+                                            <tr>
+                                                <td class="fourColumn column1"
+                                                    style="width: 20%; max-width: 20%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="5">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 120px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center"
+                                                                                                            vertical-align="middle"
+                                                                                                            style="font-size: 0px; word-break: break-word; width: 120px; padding: 1px 0px;">
+                                                                                                            <table
+                                                                                                                align="center"
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                style="border-collapse: separate; line-height: 1;">
+                                                                                                                <tr>
+                                                                                                                    <td align="center"
+                                                                                                                        valign="middle"
+                                                                                                                        style="line-height: 1; background-color: rgb(49, 126, 231); padding: 10px; border-radius: 10px; border-width: 1px; border-color: rgb(49, 126, 231); border-style: solid; background-image: url(&quot;&quot;); background-size: 41px; background-position: 42% 45%; background-repeat: no-repeat;">
+                                                                                                                        <a target="_blank"
+                                                                                                                            style="font-size: 0px; text-decoration: none;">
+                                                                                                                            <p
+                                                                                                                                style="margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 15px; font-weight: normal; text-decoration: none; text-transform: none;">
+                                                                                                                                <span id="b1">项目概览</>
+                                                                                                                            </p>
+                                                                                                                        </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                                <td class="fourColumn column2"
+                                                    style="width: 20%; max-width: 20%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="5">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 120px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center"
+                                                                                                            vertical-align="middle"
+                                                                                                            style="font-size: 0px; word-break: break-word; width: 120px; padding: 1px 0px;">
+                                                                                                            <table
+                                                                                                                align="center"
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                style="border-collapse: separate; line-height: 1;">
+                                                                                                                <tr>
+                                                                                                                    <td align="center"
+                                                                                                                        valign="middle"
+                                                                                                                        style="line-height: 1; background-color: rgb(49, 126, 231); padding: 10px; border-radius: 10px; border-width: 1px; border-color: rgb(49, 126, 231); border-style: solid; background-image: url(&quot;&quot;); background-size: 37px; background-position: 42% 45%; background-repeat: no-repeat;">
+                                                                                                                        <a target="_blank"
+                                                                                                                            style="font-size: 0px; text-decoration: none;">
+                                                                                                                            <p
+                                                                                                                                style="margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 15px; font-weight: normal; text-decoration: none; text-transform: none;">
+                                                                                                                                <span id="b2">监测数据</span>
+                                                                                                                            </p>
+                                                                                                                        </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                                <td class="fourColumn column3"
+                                                    style="width: 20%; max-width: 20%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="5">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 120px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center"
+                                                                                                            vertical-align="middle"
+                                                                                                            style="font-size: 0px; word-break: break-word; width: 120px; padding: 1px 0px;">
+                                                                                                            <table
+                                                                                                                align="center"
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                style="border-collapse: separate; line-height: 1;">
+                                                                                                                <tr>
+                                                                                                                    <td align="center"
+                                                                                                                        valign="middle"
+                                                                                                                        style="line-height: 1; background-color: rgb(49, 126, 231); padding: 10px; border-radius: 10px; border-width: 1px; border-color: rgb(49, 126, 231); border-style: solid; background-image: url(&quot;&quot;); background-size: 37px; background-position: 47% 45%; background-repeat: no-repeat;">
+                                                                                                                        <a target="_blank"
+                                                                                                                            style="font-size: 0px; text-decoration: none;">
+                                                                                                                            <p
+                                                                                                                                style="margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 15px; font-weight: normal; text-decoration: none; text-transform: none;">
+                                                                                                                                <span id="b3">状态评估</span>
+                                                                                                                            </p>
+                                                                                                                        </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                       
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                                <td class="fourColumn column4"
+                                                    style="width: 20%; max-width: 20%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="5">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 120px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center"
+                                                                                                            vertical-align="middle"
+                                                                                                            style="font-size: 0px; word-break: break-word; width: 120px; padding: 1px 0px;">
+                                                                                                            <table
+                                                                                                                align="center"
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                style="border-collapse: separate; line-height: 1;">
+                                                                                                                <tr>
+                                                                                                                    <td align="center"
+                                                                                                                        valign="middle"
+                                                                                                                        style="line-height: 1; background-color: rgb(49, 126, 231); padding: 10px; border-radius: 10px; border-width: 1px; border-color: rgb(49, 126, 231); border-style: solid; background-image: url(&quot;&quot;); background-size: 37px; background-position: 50% 45%; background-repeat: no-repeat;">
+                                                                                                                        <a target="_blank"
+                                                                                                                            style="font-size: 0px; text-decoration: none;">
+                                                                                                                            <p
+                                                                                                                                style="margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 15px; font-weight: normal; text-decoration: none; text-transform: none;">
+                                                                                                                                <span id="b4">结构维护</span>
+                                                                                                                            </p>
+                                                                                                                        </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                                <td class="fourColumn column5"
+                                                    style="width: 20%; max-width: 20%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="5">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 120px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td align="center"
+                                                                                                            vertical-align="middle"
+                                                                                                            style="font-size: 0px; word-break: break-word; width: 120px; padding: 1px 0px;">
+                                                                                                            <table
+                                                                                                                align="center"
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                style="border-collapse: separate; line-height: 1;">
+                                                                                                                <tr>
+                                                                                                                    <td align="center"
+                                                                                                                        valign="middle"
+                                                                                                                        style="line-height: 1; background-color: rgb(49, 126, 231); padding: 10px; border-radius: 10px; border-width: 1px; border-color: rgb(49, 126, 231); border-style: solid; background-image: url(&quot;&quot;); background-size: 37px; background-position: 53% 45%; background-repeat: no-repeat;">
+                                                                                                                        <a target="_blank"
+                                                                                                                            style="font-size: 0px; text-decoration: none;">
+                                                                                                                            <p
+                                                                                                                                style="margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 15px; font-weight: normal; text-decoration: none; text-transform: none;">
+                                                                                                                                <span id="b5">人员信息</span>
+                                                                                                                            </p>
+                                                                                                                        </a>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="full" style="margin: 0px auto; line-height: 0px; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td align="center" class="fullTd"
+                                    style="direction: ltr; font-size: 0px; padding: 20px; text-align: center; vertical-align: top; word-break: break-word; width: 600px; background-image: url(&quot;&quot;); background-repeat: repeat; background-size: 100px; background-position: 10% 50%;">
+                                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                        style="border-collapse: collapse; border-spacing: 0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 375px; border-top: 1px solid rgb(204, 204, 204);">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <div style="margin: 0px auto; max-width: 800px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                        style="background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 1% 50%;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; width: 600px;">
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                        style="vertical-align: top;">
+                                        <tbody>
+                                            <tr>
+                                                <td class="oneColumn column1"
+                                                    style="width: 100%; max-width: 100%; min-height: 1px; font-size: 13px; text-align:center; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    
+                                                    <div>
+                                                        <div id="tab_0">
+
+                                                         <div class="swipe" id="swipe">
+      <!-- 模糊背景 -->
+      <div class="bg" id="swipe_bg"></div>
+      <!-- 图片区域 -->
+      <section>
+        <!-- 图片显示 -->
+        <div class="img-box" id="swipe_img_box">
+          <a href="#" class="link" id="swipe_link">
+            <img
+              src="https://s1.ax1x.com/2022/11/18/zn6eu8.jpg"
+              alt=""
+              class="img"
+              id="swipe_img"
+            />
+          </a>
+        </div>
+        <!-- 指示点 -->
+        <div class="select" id="swipe_select">
+          <!-- <a href="#" class="item checked"></a>
+                <a href="#" class="item"></a>
+                <a href="#" class="item"></a> -->
+        </div>
+        <!-- 左侧翻页按钮 -->
+        <div class="btn left" id="swipe_btn_left">
+          <!-- 字体图标：左箭头 -->
+          <i class="fa fa-angle-left" aria-hidden="true"></i>
+        </div>
+        <!-- 右侧翻页按钮 -->
+        <div class="btn right" id="swipe_btn_right">
+          <!-- 字体图标：右箭头 -->
+          <i class="fa fa-angle-right" aria-hidden="true"></i>
+        </div>
+      </section>
+    </div>
+    <script>
+      // 当前轮播图编号
+      let current_index = -1;
+      // 自动轮播定时器
+      let swipe_timer = null;
+      // 轮播图的图片地址与跳转链接
+      let links = [
+        { image: "https://s1.ax1x.com/2022/11/18/zn6eu8.jpg", target: "#1" },
+        { image: "https://s1.ax1x.com/2022/11/18/zn6w59.jpg", target: "#2" },
+        { image: "https://s1.ax1x.com/2022/11/18/zn66KK.jpg", target: "#3" },
+        { image: "https://s1.ax1x.com/2022/11/18/zn6gbD.jpg", target: "#4" },
+        { image: "https://s1.ax1x.com/2022/11/18/zn6f5d.jpg", target: "#5" },
+      ];
+
+      // 需要操作到的元素
+      let swipe = document.getElementById("swipe");
+      let swipe_bg = document.getElementById("swipe_bg");
+      let swipe_img_box = document.getElementById("swipe_img_box");
+      let swipe_link = document.getElementById("swipe_link");
+      let swipe_img = document.getElementById("swipe_img");
+      let swipe_select = document.getElementById("swipe_select");
+      let swipe_btn_left = document.getElementById("swipe_btn_left");
+      let swipe_btn_right = document.getElementById("swipe_btn_right");
+
+      // 事件
+      // 切换图片
+      let select = (index) => {
+        // 停止播放
+        stop();
+        // 转数字
+        index = Number(index);
+        // 越界超过最大数量,直接返回
+        if (index >= links.length) {
+          return;
+        }
+        // 选中当前已选中的,直接返回
+        if (current_index == index) {
+          return;
+        }
+        // 取消当前指示点的选中状态
+        if (current_index > -1) {
+          swipe_select.children[current_index].classList.remove("checked");
+        }
+        // 变更当前轮播图的编号
+        current_index = index;
+        // 找到当前元素
+        let current_link = links[current_index];
+        // 背景变化
+        swipe_bg.style.backgroundImage = "url(" + current_link.image + ")";
+        // 前景变化
+        swipe_img.setAttribute("src", current_link.image);
+        // 链接变化
+        swipe_link.setAttribute("href", current_link.target);
+        // 增加新的指示点的选中状态
+        swipe_select.children[current_index].classList.add("checked");
+      };
+      // 自动切换图片
+      let autoSelect = (index) => {
+        // 转数字
+        index = Number(index);
+        // 越界超过最大数量，直接返回
+        if (index >= links.length) {
+          return;
+        }
+        // 选中当前已选中的，直接返回
+        if (current_index == index) {
+          return;
+        }
+        // 取消当前指示点的选中状态
+        swipe_select.children[current_index].classList.remove("checked");
+        // 变更当前轮播图的编号
+        current_index = index;
+        // 找到当前元素
+        let current_link = links[current_index];
+        // 前景图片
+        // 第一步调整过渡时间
+        swipe_img.style.transition = "opacity 0.5s ease-in 0s";
+        // 第二步调整不透明度为0.2
+        swipe_img.style.opacity = 0.2;
+        // 第三步延迟变换img图片，并重新定义透明度以及过渡时间和过渡方式
+        setTimeout(() => {
+          // 背景变化
+          swipe_bg.style.backgroundImage = "url(" + current_link.image + ")";
+          // 前景变化
+          swipe_img.setAttribute("src", current_link.image);
+          // 链接变化
+          swipe_link.setAttribute("href", current_link.target);
+          // 不透明度变化
+          swipe_img.style.transition = "opacity 0.7s ease-out 0s";
+          swipe_img.style.opacity = 1;
+          // 增加新的指示点选中状态
+          // 如果已经通过手动点击了，选中则此处不再执行
+          if (!document.querySelector(".swipe .checked")) {
+            swipe_select.children[current_index].style.transition =
+              "background-color 0.5s";
+            swipe_select.children[current_index].classList.add("checked");
+          }
+        }, 500);
+      };
+      // 播放
+      let play = () => {
+        // 3秒切换一次
+        swipe_timer = setInterval(() => {
+          // 设置新的index
+          let index = current_index + 1;
+          // 右翻越界，切到第一张
+          if (index >= links.length) {
+            index = 0;
+          }
+          // 加载新图片（这里选择自动，增加切换效果）
+          autoSelect(index);
+        }, 3000);
+      };
+      // 停止
+      let stop = () => {
+        if (swipe_timer) {
+          clearInterval(swipe_timer);
+          swipe_timer = null;
+        }
+      };
+      // 初始化
+      let init = () => {
+        for (let i = 0; i < links.length; i++) {
+          // 创建a元素
+          let item = document.createElement("a");
+          // 修改属性
+          item.setAttribute("class", "item");
+          item.setAttribute("href", "#");
+          item.setAttribute("data-index", i);
+          // 追加元素
+          swipe_select.appendChild(item);
+        }
+        // 默认第一张
+        select(0);
+        // 绑定各个事件并开始轮播
+        bind();
+        play();
+      };
+      // 绑定
+      let bind = () => {
+        // 左翻事件监听
+        swipe_btn_left.addEventListener("click", () => {
+          // 设置新的index
+          let index = current_index - 1;
+          // 左翻越界，切到最后一张
+          if (index < 0) {
+            index = links.length - 1;
+          }
+          // 加载新图片
+          select(index);
+        });
+        // 右翻事件监听
+        swipe_btn_right.addEventListener("click", () => {
+          // 设置新的index
+          let index = current_index + 1;
+          // 右翻越界，切到第一张
+          if (index >= links.length) {
+            index = 0;
+          }
+          // 加载新图片
+          select(index);
+        });
+        // 循环绑定指示器点击事件
+        for (const key in swipe_select.children) {
+          if (swipe_select.children.hasOwnProperty(key)) {
+            const element = swipe_select.children[key];
+            element.addEventListener("click", (e) => {
+              // 取消默认点击跳转
+              e.preventDefault();
+              // 跳转到当前指示点中data-index所指定的图片
+              select(e.target.dataset.index);
+            });
+          }
+        }
+        // 绑定鼠标移入事件
+        swipe.addEventListener("mouseover", (e) => {
+          // 防止鼠标从子元素移出时触发
+          if (
+            e.relatedTarget &&
+            swipe.compareDocumentPosition(e.relatedTarget) == 10
+          ) {
+            stop();
+          }
+        });
+        // 绑定鼠标移出事件
+        swipe.addEventListener("mouseout", (e) => {
+          // 防止鼠标从子元素移出时触发
+          if (
+            e.relatedTarget &&
+            swipe.compareDocumentPosition(e.relatedTarget) == 10
+          ) {
+            play();
+          }
+        });
+        // 绑定鼠标移动事件
+        swipe.addEventListener("mousemove", (e) => {
+          stop();
+        });
+      };
+
+      // 页面加载完毕，执行初始化
+      window.addEventListener("load", () => {
+        init();
+      });
+    </script>
+
+                                                        </div>
+                                                        <div id="tab_1" style="display: none">
+                                                        
+                                                        <div>子页面1</div>
+
+                                                        <div class="full" style="margin: 0px auto; max-width: 800px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable" style="width: 600px;">
+      <tbody>
+        <tr>
+          <td class="fullTd" style="direction: ltr; width: 800px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top;">
+            <div style="display: inline-block; vertical-align: top; width: 100%;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="vertical-align: top;">
+                <tr>
+                  <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
+                    <div>
+                      <img height="auto" width="auto" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.takungpao.com%2F2019%2F0314%2F20190314031846420.jpg&refer=http%3A%2F%2Fimg.takungpao.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671089159&t=2eeb4a7a23ef0f65bf758a9eb2aaec69" style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; width: auto; max-width: 100%; padding: 0px;">
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+                                                        
+                                                        </div>
+                                                        <div id="tab_2" style="display: none;">
+                                                         <div>
+                                                          <style>
+      #main,
+      html,
+      body {
+        width: 100%;
+      }
+      #main {
+        height: 200px;
+      }
+    </style>
+    <div id="main" style="height: 200px; width: 400px;"></div>
+    <script type="text/javascript">
+      var myChart = echarts.init(document.getElementById("main"));
+      window.onresize = function () {
+        myChart.resize();
+      };
+      option = {
+        tooltip: {
+          trigger: "axis",
+        },
+        legend: {
+          data: ["a", "b", "c", "d", "e"],
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        toolbox: {
+          feature: {},
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: ["A", "B", "C", "D", "E", "F", "G"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            name: "a",
+            type: "line",
+            stack: "Total",
+            data: [120, 132, 101, 134, 90, 230, 210],
+          },
+          {
+            name: "b",
+            type: "line",
+            stack: "Total",
+            data: [220, 182, 191, 234, 290, 330, 310],
+          },
+          {
+            name: "c",
+            type: "line",
+            stack: "Total",
+            data: [150, 232, 201, 154, 190, 330, 410],
+          },
+          {
+            name: "d",
+            type: "line",
+            stack: "Total",
+            data: [320, 332, 301, 334, 390, 330, 320],
+          },
+          {
+            name: "e",
+            type: "line",
+            stack: "Total",
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+          },
+        ],
+      };
+
+      myChart.setOption(option);
+      window.addEventListener("resize", function () {
+        myChart.resize();
+      });
+    </script>
+            </div>
+
+            <div class="full" style="margin: 0px auto; max-width: 800px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable" style="width: 600px;">
+      <tbody>
+        <tr>
+          <td class="fullTd" style="direction: ltr; width: 800px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top;">
+            <div style="display: inline-block; vertical-align: top; width: 100%;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="vertical-align: top;">
+                <tr>
+                  <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
+                    <div>
+                      <img height="auto" width="auto" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.takungpao.com%2F2019%2F0314%2F20190314031846420.jpg&refer=http%3A%2F%2Fimg.takungpao.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671089159&t=2eeb4a7a23ef0f65bf758a9eb2aaec69" style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; width: auto; max-width: 100%; padding: 0px;">
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+                                                    </div>
+        <div id="tab_3" style="display: none">
+        
+        <div>子页面3</div>
+
+        <div class="full" style="margin: 0px auto; max-width: 800px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable" style="width: 600px;">
+      <tbody>
+        <tr>
+          <td class="fullTd" style="direction: ltr; width: 800px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top;">
+            <div style="display: inline-block; vertical-align: top; width: 100%;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="vertical-align: top;">
+                <tr>
+                  <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
+                    <div>
+                      <img height="auto" width="auto" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.takungpao.com%2F2019%2F0314%2F20190314031846420.jpg&refer=http%3A%2F%2Fimg.takungpao.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671089159&t=2eeb4a7a23ef0f65bf758a9eb2aaec69" style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; width: auto; max-width: 100%; padding: 0px;">
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+        </div>
+        <div id="tab_4" style="display: none">
+        
+        <div>子页面4</div>
+
+        <div class="full" style="margin: 0px auto; max-width: 800px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable" style="width: 600px;">
+      <tbody>
+        <tr>
+          <td class="fullTd" style="direction: ltr; width: 800px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top;">
+            <div style="display: inline-block; vertical-align: top; width: 100%;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="vertical-align: top;">
+                <tr>
+                  <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
+                    <div>
+                      <img height="auto" width="auto" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.takungpao.com%2F2019%2F0314%2F20190314031846420.jpg&refer=http%3A%2F%2Fimg.takungpao.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671089159&t=2eeb4a7a23ef0f65bf758a9eb2aaec69" style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; width: auto; max-width: 100%; padding: 0px;">
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+        </div>
+        <div id="tab_5" style="display: none">
+        
+        <div>子页面5</div>
+
+        <div class="full" style="margin: 0px auto; max-width: 800px;">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable" style="width: 600px;">
+      <tbody>
+        <tr>
+          <td class="fullTd" style="direction: ltr; width: 800px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top;">
+            <div style="display: inline-block; vertical-align: top; width: 100%;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="vertical-align: top;">
+                <tr>
+                  <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
+                    <div>
+                      <img height="auto" width="auto" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.takungpao.com%2F2019%2F0314%2F20190314031846420.jpg&refer=http%3A%2F%2Fimg.takungpao.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671089159&t=2eeb4a7a23ef0f65bf758a9eb2aaec69" style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; width: auto; max-width: 100%; padding: 0px;">
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+        
+        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+ 
+              
+
+                        
+                <div class="full" style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; padding-top: 0px; text-align: center; vertical-align: top;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                        style="vertical-align: top;">
+                                        <tr>
+                                            <td align="center" vertical-align="middle"
+                                                style="line-height: 0; padding-top: 14px; background-color: rgb(49,126,231); width: 600px; background-image: url(&quot;&quot;); background-size: 100px; background-position: 10% 50%; background-repeat: no-repeat;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0"
+                        style="background-color: rgb(49,126,231); background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 1% 50%;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; width: 600px;">
+                                    <table width="100%" border="0" cellpadding="0" cellspacing="0"
+                                        style="vertical-align: top;">
+                                        <tbody>
+                                            <tr>
+                                                <td class="oneColumn column1"
+                                                    style="width: 100%; max-width: 100%; min-height: 1px; font-size: 13px; text-align: left; direction: ltr; vertical-align: top; padding: 0px;">
+                                                    <div columnnumber="1">
+                                                        <table align="center" border="0" cellpadding="0" cellspacing="0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td
+                                                                        style="direction: ltr; font-size: 0px; text-align: center; vertical-align: top; border: 0px;">
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 600px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td class="fullTd"
+                                                                                                            style="direction: ltr; width: 600px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top; background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 10% 50%;">
+                                                                                                            <table
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                width="100%"
+                                                                                                                style="vertical-align: top;">
+                                                                                                                <tr>
+                                                                                                                    <td align="left"
+                                                                                                                        style="font-size: 0px; padding: 0px 20px;">
+                                                                                                                        <div class="text"
+                                                                                                                            style="word-wrap: break-word; margin: 0px; text-align: center; line-height: 1.6; color: rgb(255, 255, 255); font-size: 12px; font-weight: normal;">
+                                                                                                                            <div>
+                                                                                                                                <p
+                                                                                                                                    style="text-size-adjust: none; word-break: break-word; line-height: 1.6; font-size: 12px; margin: 0px;">
+                                                                                                                                    
+                                                                                                                                </p>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                        <div class="mj-column-per-50"
+                                                                            style="width: 100%; max-width: 100%; font-size: 13px; text-align: left; direction: ltr; display: inline-block; vertical-align: top;">
+                                                                            <table border="0" cellpadding="0"
+                                                                                cellspacing="0" width="100%"
+                                                                                style="border-collapse: collapse; border-spacing: 0px; width: 100%; vertical-align: top;">
+                                                                                <tr>
+                                                                                    <td align="center" border="0"
+                                                                                        style="font-size: 0px; word-break: break-word;">
+                                                                                        <div class="full"
+                                                                                            style="margin: 0px auto; max-width: 600px;">
+                                                                                            <table align="center"
+                                                                                                border="0"
+                                                                                                cellpadding="0"
+                                                                                                cellspacing="0"
+                                                                                                class="fullTable"
+                                                                                                style="width: 600px;">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <td class="fullTd"
+                                                                                                            style="direction: ltr; width: 600px; font-size: 0px; padding-bottom: 0px; text-align: center; vertical-align: top; background-image: url(&quot;&quot;); background-repeat: no-repeat; background-size: 100px; background-position: 10% 50%;">
+                                                                                                            <table
+                                                                                                                border="0"
+                                                                                                                cellpadding="0"
+                                                                                                                cellspacing="0"
+                                                                                                                width="100%"
+                                                                                                                style="vertical-align: top;">
+                                                                                                                <tr>
+                                                                                                                    <td align="left"
+                                                                                                                        style="font-size: 0px; padding: 1px 20px;">
+                                                                                                                        <div class="text"
+                                                                                                                            style="word-wrap: break-word; margin: 0px; text-align: center; line-height: 1.6; color: rgb(49,126,231); font-size: 12px; font-weight: normal;">
+                                                                                                                            <div>
+                                                                                                                                <p
+                                                                                                                                    style="text-size-adjust: none; word-break: break-word; line-height: 1.6; font-size: 12px; margin: 0px;">
+                                                                                                                                    
+                                                                                                                                </p>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="full" style="margin: 0px auto; max-width: 600px;">
+                    <table align="center" border="0" cellpadding="0" cellspacing="0" class="fullTable"
+                        style="width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td
+                                    style="direction: ltr; font-size: 0px; padding-top: 0px; text-align: center; vertical-align: top;">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%"
+                                        style="vertical-align: top;">
+                                        <tr>
+                                            <td align="center" vertical-align="middle"
+                                                style="line-height: 0; padding-top: 14px; background-color: rgb(49,126,231); width: 600px; background-image: url(&quot;&quot;); background-size: 100px; background-position: 10% 50%; background-repeat: no-repeat;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src=https://www.drageasy.com/drag-assets/pc/drag-js/chunk-vendors.js></script>
+    <script src=https://www.drageasy.com/drag-assets/pc/drag-js/index.js></script>
+    <script src="https://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+
+</body>
+
+</html>
